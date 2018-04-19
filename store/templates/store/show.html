@@ -1,0 +1,10 @@
+{% extends "base.html" %} 
+
+{% block content %}
+<h1>{{ item.name }}</h1>
+
+<ul class="list-group">
+  <li class="w-50 list-group-item">Price: {{item.price}}</li>
+  <li class="w-50 list-group-item">Code: {{item.code}}</li>
+</ul>
+{% endblock content %}

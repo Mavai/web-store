@@ -1,0 +1,49 @@
+{% extends "base.html" %} {% block content %}
+<h1>Welcome to the web store!</h1>
+
+<div class="dropdown float-right">
+  <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
+    aria-expanded="false">
+    Order by
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href={% url 'index' %}?sort=name>Name</a>
+    <a class="dropdown-item" href={% url 'index' %}?sort=code>Itemcode</a>
+    <a class="dropdown-item" href={% url 'index' %}?sort=price&order=asc>Price(lowest)</a>
+    <a class="dropdown-item" href={% url 'index' %}?sort=price&order=desc>Price(highest)</a>
+  </div>
+</div>
+
+<div>
+  <table class="table" id="itemlist">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Itemcode</th>
+        <th scope="col">Price</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in items %}
+      <tr>
+        <td>
+          <a href="{{BASE_PATH}}/store/{{i.id}}">{{ i.name }}</a>
+        </td>
+        <td>{{ i.code }}</td>
+        <td>{{ i.price }}</td>
+        <td>
+          <form class="form-inline my-2 my-lg-0 float-right col-sm-4 add-to-cart-form" add-to-cart-url={% url 'add-to-cart' %}>
+            <div class="form-group">
+              <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" min="1" max="50" value="1" aria-label="Count" id={{ i.id }}, name="count">
+              <input class="form-control" type="hidden" name="id" value={{ i.id }}>
+              <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">Add to cart</button>
+            </div>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock content %}
