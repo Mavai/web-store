@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from .models import Item
 from decimal import Decimal
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -14,7 +15,10 @@ def index(request):
             items = Item.objects.order_by(sort)
     else:
         items = Item.objects.all()
-    context = {'items': items, 'sum': request.session.get('sum', 0)}
+    paginator = Paginator(items, 5)
+    page = request.GET.get('page')
+    items_to_show = paginator.get_page(page)
+    context = {'items': items_to_show, 'sum': request.session.get('sum', 0)}
     return render(request, 'store/index.html', context)
 
 
@@ -29,6 +33,7 @@ def cart(request):
     items_in_cart = Item.objects.filter(id__in=cart.keys()).values()
     for item in items_in_cart:
         item['count'] = cart[str(item['id'])]
+        item['total_price'] = item['price'] * cart[str(item['id'])]
     context = {'cart': items_in_cart, 'sum': request.session.get('sum', 0)}
     return render(request, 'store/cart.html', context)
 

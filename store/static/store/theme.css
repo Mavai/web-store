@@ -9,3 +9,7 @@ h1 {
 .dropdown {
   padding: 10px
 }
+
+p {
+  white-space: pre-wrap;
+}

@@ -7,10 +7,10 @@
     Order by
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href={% url 'index' %}?sort=name>Name</a>
-    <a class="dropdown-item" href={% url 'index' %}?sort=code>Itemcode</a>
-    <a class="dropdown-item" href={% url 'index' %}?sort=price&order=asc>Price(lowest)</a>
-    <a class="dropdown-item" href={% url 'index' %}?sort=price&order=desc>Price(highest)</a>
+    <a class="dropdown-item" href="?sort=name{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Name</a>
+    <a class="dropdown-item" href="?sort=code{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Itemcode</a>
+    <a class="dropdown-item" href="?sort=price&order=asc{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Price(lowest)</a>
+    <a class="dropdown-item" href="?sort=price&order=desc{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Price(highest)</a>
   </div>
 </div>
 
@@ -35,7 +35,8 @@
         <td>
           <form class="form-inline my-2 my-lg-0 float-right col-sm-4 add-to-cart-form" add-to-cart-url={% url 'add-to-cart' %}>
             <div class="form-group">
-              <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" min="1" max="50" value="1" aria-label="Count" id={{ i.id }}, name="count">
+              <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" min="1" max="50" value="1" aria-label="Count"
+                id={{ i.id }}, name="count">
               <input class="form-control" type="hidden" name="id" value={{ i.id }}>
               <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">Add to cart</button>
             </div>
@@ -46,4 +47,35 @@
     </tbody>
   </table>
 </div>
+
+<nav aria-label="Page navigation">
+  <ul class="pagination">
+    {% if items.has_previous %}
+    <li class="page-item">
+      <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
+        tabindex="-1">First</a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ items.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+        {{ items.previous_page_number }}
+      </a>
+    </li>
+    {% endif %}
+    <li class="page-item active">
+      <a class="page-link" href="#">{{ items.number }}</a>
+    </li>
+    {% if items.has_next %}
+    <li class="page-item">
+      <a class="page-link" href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+        {{ items.next_page_number }}
+      </a>
+    </li>
+    <li class="page-item">
+      <a class="page-link" href="?page={{ items.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+        Last
+      </a>
+    </li>
+    {% endif %}
+  </ul>
+</nav>
 {% endblock content %}
