@@ -78,7 +78,7 @@ def add_to_cart(request):
 
 def sorted_products(sort, order, filter):
     products = Product.objects.filter(
-        Q(name__contains=filter) | Q(code__contains=filter))
+        Q(name__icontains=filter) | Q(code__icontains=filter))
     if (sort == 'name' or sort == 'code' or sort == 'price' or sort == '-price'):
         products = products.order_by(sort)
     return products
