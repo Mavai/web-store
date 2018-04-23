@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from .models import Product
 from decimal import Decimal
 from django.core.paginator import Paginator
@@ -49,7 +49,7 @@ def delete_from_cart(request):
     cart = request.session['cart']
     product = Product.objects.get(id=product_id)
     cart[product_id] = cart[product_id] - count
-    if cart[product_id] == 0:
+    if cart[product_id] <= 0:
         del cart[product_id]
     request.session['cart'] = cart
     update_total_sum(request, product, count, 'remove')
@@ -62,6 +62,8 @@ def add_to_cart(request):
     product_id = request.GET.get('id')
     count = int(request.GET.get('count'))
     cart = request.session.get('cart', {})
+    if count <= 0:
+        return HttpResponseBadRequest
     if product_id not in cart:
         cart[product_id] = count
     else:
