@@ -11,5 +11,10 @@ h1 {
 }
 
 p {
-  white-space: pre-wrap;
+  white-space: pre-wrap
+}
+
+.btn:focus,.btn:active {
+  outline: none !important;
+  box-shadow: none;
 }

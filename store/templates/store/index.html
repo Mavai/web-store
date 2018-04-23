@@ -1,5 +1,26 @@
-{% extends "base.html" %} {% block content %}
-<h1>Welcome to the web store!</h1>
+{% extends "base.html" %} 
+{% load templatehelpers %}
+{% block content %} 
+<div class="row">
+  <div class="col">
+    <h1>Welcome to the web store!</h1>
+  </div>
+  <div class="col-sm-4 col-md-3 align-self-center">
+    <form class="form" role="search">
+      <div class="input-group">
+        {% for key, value in request.GET.items %}
+        {% if key != 'filter' %}
+        <input type="hidden" class="form-control" placeholder="Search" name="{{ key }}" value="{{ value }}">
+        {% endif %}
+        {% endfor %}
+        <input type="text" class="form-control" placeholder="Search" name="filter">
+        <div class="input-group-btn">
+          <button class="btn btn-default" type="submit">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
 
 <div class="dropdown float-right">
   <button class="btn btn-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true"
@@ -7,10 +28,10 @@
     Order by
   </button>
   <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" href="?sort=name{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Name</a>
-    <a class="dropdown-item" href="?sort=code{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Itemcode</a>
-    <a class="dropdown-item" href="?sort=price&order=asc{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Price(lowest)</a>
-    <a class="dropdown-item" href="?sort=price&order=desc{% if request.GET.page %}&page={{ request.GET.page }}{% endif %}">Price(highest)</a>
+    <a class="dropdown-item" href="{% relative_url 'name' 'sort' params %}">Name</a>
+    <a class="dropdown-item" href="{% relative_url 'code' 'sort' params %}">Itemcode</a>
+    <a class="dropdown-item" href="{% relative_url 'price' 'sort' params %}">Price(lowest)</a>
+    <a class="dropdown-item" href="{% relative_url '-price' 'sort' params %}">Price(highest)</a>
   </div>
 </div>
 
@@ -25,10 +46,10 @@
       </tr>
     </thead>
     <tbody>
-      {% for i in items %}
+      {% for i in products %}
       <tr>
         <td>
-          <a href="{{BASE_PATH}}/store/{{i.id}}">{{ i.name }}</a>
+          <a href={% url 'show' i.id %}>{{ i.name }}</a>
         </td>
         <td>{{ i.code }}</td>
         <td>{{ i.price }}</td>
@@ -38,6 +59,7 @@
               <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" min="1" max="50" value="1" aria-label="Count"
                 id={{ i.id }}, name="count">
               <input class="form-control" type="hidden" name="id" value={{ i.id }}>
+              <input class="form-control" type="hidden" name="name" value={{ i.name }}>
               <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">Add to cart</button>
             </div>
           </form>
@@ -50,28 +72,27 @@
 
 <nav aria-label="Page navigation">
   <ul class="pagination">
-    {% if items.has_previous %}
+    {% if products.has_previous %}
     <li class="page-item">
-      <a class="page-link" href="?page=1{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}"
-        tabindex="-1">First</a>
+      <a class="page-link" href="{% relative_url '1' 'page' params %}" tabindex="-1">First</a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ items.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-        {{ items.previous_page_number }}
+      <a class="page-link" href="{% relative_url products.previous_page_number 'page' params %}">
+        {{ products.previous_page_number }}
       </a>
     </li>
     {% endif %}
     <li class="page-item active">
-      <a class="page-link" href="#">{{ items.number }}</a>
+      <a class="page-link" href="#">{{ products.number }}</a>
     </li>
-    {% if items.has_next %}
+    {% if products.has_next %}
     <li class="page-item">
-      <a class="page-link" href="?page={{ items.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
-        {{ items.next_page_number }}
+      <a class="page-link" href="{% relative_url products.next_page_number 'page' params %}">
+        {{ products.next_page_number }}
       </a>
     </li>
     <li class="page-item">
-      <a class="page-link" href="?page={{ items.paginator.num_pages }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}">
+      <a class="page-link" href="{% relative_url products.paginator.num_pages 'page' params %}">
         Last
       </a>
     </li>

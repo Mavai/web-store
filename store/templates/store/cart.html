@@ -1,4 +1,6 @@
-{% extends "base.html" %} {% block content %}
+{% extends "base.html" %} 
+
+{% block content %}
 <h1>Your shopping cart</h1>
 
 <div>
@@ -14,22 +16,22 @@
             </tr>
         </thead>
         <tbody>
-            {% for i in cart %}
+            {% for product in cart %}
             <tr>
                 <td>
-                    <a href="{{BASE_PATH}}/store/{{i.id}}">{{ i.name }}</a>
+                    <a href={% url 'show' product.id %}>{{ product.name }}</a>
                 </td>
-                <td>{{ i.code }}</td>
-                <td>{{ i.price }}</td>
-                <td>{{ i.count }}</td>
-                <td>{{ i.total_price }}</td>
+                <td>{{ product.code }}</td>
+                <td>{{ product.price }}</td>
+                <td>{{ product.count }}</td>
+                <td>{{ product.total_price }}</td>
                 <td>
                     <form class="form-inline my-2 my-lg-0 float-right col-sm-4" method="POST" action={% url 'delete-from-cart' %}>
                         {% csrf_token %}
                         <div class="form-group">
-                            <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" max={{ i.count }} min="1" value="1" aria-label="Count"
-                                id={{ i.id }}, name="count">
-                            <input class="form-control" type="hidden" name="id" value={{ i.id }}>
+                            <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" max={{ product.count }} min="1" value="1" aria-label="Count"
+                                id={{ product.id }}, name="count">
+                            <input class="form-control" type="hidden" name="id" value={{ product.id }}>
                             <button class="btn btn-outline-danger btn-sm my-2 my-sm-0" type="submit">Remove</button>
                         </div>
                     </form>

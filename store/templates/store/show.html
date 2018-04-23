@@ -1,28 +1,32 @@
-{% extends "base.html" %} {% block content %}
-<h1>{{ item.name }}</h1>
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ product.name }}</h1>
 
 <div class="row">
   <div class="col">
     <ul class="list-group">
-      <li class="list-group-item">Price: {{item.price}}</li>
-      <li class="list-group-item">Code: {{item.code}}</li>
+      <li class="list-group-item">Price: {{product.price}}</li>
+      <li class="list-group-item">Code: {{product.code}}</li>
     </ul>
-  </div>
-  <div class="col align-self-end">
-    <form class="form-inline my-2 my-lg-0 col-sm-4 add-to-cart-form" add-to-cart-url={% url 'add-to-cart' %}>
+    <br>
+    <form class="form-inline my-2 my-lg-0 col-sm-4  delete-from-cart-form" add-to-cart-url={% url 'add-to-cart' %}>
       <div class="form-group">
         <input class="form-control form-control-sm mr-sm-2 col-sm-4" type="number" min="1" max="50" value="1" aria-label="Count"
-          id={{ item.id }}, name="count">
-        <input class="form-control" type="hidden" name="id" value={{ item.id }}>
+        id={{ product.id }}, name="count">
+        <input class="form-control" type="hidden" name="id" value={{ product.id }}>
         <button class="btn btn-sm btn-outline-primary my-2 my-sm-0" type="submit">Add to cart</button>
       </div>
     </form>
   </div>
+  <div class="col">
+    <img class="img-fluid rounded height="350" width="350"" src={{ product.image.url }}>
+  </div>
 </div>
 <br>
 
+
 <div>
   <h2>Description:</h2>
-  <p>{{ item.description }}</p>
+  <p>{{ product.description }}</p>
 </div>
 {% endblock content %}

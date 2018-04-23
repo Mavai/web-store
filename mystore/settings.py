@@ -123,3 +123,14 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# SESSION EXPIRES AT BROWER CLOSE
+SESSION_EXPIRE_AT_BROWSER_CLOSE= True
+
+PROJECT_ROOT = os.path.abspath(os.path.dirname(__name__))
+# Absolute filesystem path to the directory that will hold user-uploaded files.
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
+
+# URL that handles the media served from MEDIA_ROOT.
+MEDIA_URL = '/media/'
+
